@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Settings, Sparkles, Lightbulb, Hammer } from 'lucide-react';
+import { Settings, Sparkles, Lightbulb, Hammer, Activity } from 'lucide-react';
 import { SettingsModal } from './components/shared/SettingsModal';
 import IdeaScoutApp from './tools/IdeaScout/IdeaScoutApp';
 import FeatureForgeApp from './tools/FeatureForge/FeatureForgeApp';
+import SignalLabApp from './tools/SignalLab/SignalLabApp';
 import './index.css';
 
-type AppMode = 'HUB' | 'IDEA_SCOUT' | 'FEATURE_FORGE';
+type AppMode = 'HUB' | 'IDEA_SCOUT' | 'FEATURE_FORGE' | 'SIGNAL_LAB';
 
 function App() {
   const [mode, setMode] = useState<AppMode>('HUB');
@@ -30,21 +31,24 @@ function App() {
   return (
     <>
       <header>
-        <div 
-          className="logo-container" 
-          onClick={navigateHub} 
-          style={{ cursor: 'pointer' }}
-        >
-          {mode === 'HUB' && <><Sparkles className="text-gradient" size={28} /><span>Startup<span className="text-gradient">Suite</span></span></>}
-          {mode === 'IDEA_SCOUT' && <><Lightbulb className="text-gradient" size={28} /><span>Idea<span className="text-gradient">Scout</span></span></>}
-          {mode === 'FEATURE_FORGE' && <><Hammer className="text-gradient" size={28} /><span>Feature<span className="text-gradient">Forge</span></span></>}
-        </div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <div
+            className="logo-container"
+            onClick={navigateHub}
+            style={{ cursor: 'pointer' }}
+          >
+            {mode === 'HUB' && <><Sparkles className="text-gradient" size={28} /><span>Startup<span className="text-gradient">Suite</span></span></>}
+            {mode === 'IDEA_SCOUT' && <><Lightbulb className="text-gradient" size={28} /><span>Idea<span className="text-gradient">Scout</span></span></>}
+            {mode === 'FEATURE_FORGE' && <><Hammer className="text-gradient" size={28} /><span>Feature<span className="text-gradient">Forge</span></span></>}
+            {mode === 'SIGNAL_LAB' && <><Activity className="text-gradient" size={28} /><span>Signal<span className="text-gradient">Lab</span></span></>}
+          </div>
           {mode !== 'HUB' && (
             <button className="btn btn-outline" onClick={navigateHub}>
-              Back to Hub
+              Back to Suite
             </button>
           )}
+        </div>
+        <div style={{ display: 'flex', gap: '1rem' }}>
           <button className="btn btn-secondary" onClick={() => setIsSettingsOpen(true)}>
             <Settings size={20} />
             <span>Settings</span>
@@ -65,8 +69,8 @@ function App() {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-            <div 
-              className="glass-panel" 
+            <div
+              className="glass-panel"
               style={{ padding: '2rem', cursor: 'pointer', transition: 'all 0.2s', border: '1px solid var(--color-border)' }}
               onClick={() => setMode('IDEA_SCOUT')}
               onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--color-primary)'}
@@ -77,8 +81,8 @@ function App() {
               <p style={{ color: 'var(--color-text-muted)' }}>Brainstorm, evaluate, and refine new product ideas with AI. Identifies target audience, competition, and UK grants.</p>
             </div>
 
-            <div 
-              className="glass-panel" 
+            <div
+              className="glass-panel"
               style={{ padding: '2rem', cursor: 'pointer', transition: 'all 0.2s', border: '1px solid var(--color-border)' }}
               onClick={() => setMode('FEATURE_FORGE')}
               onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--color-primary)'}
@@ -88,36 +92,59 @@ function App() {
               <h2 style={{ marginBottom: '0.5rem' }}>Feature Forge</h2>
               <p style={{ color: 'var(--color-text-muted)' }}>Break down your feature ideas into actionable engineering tasks, user stories, acceptance criteria, and test cases.</p>
             </div>
+
+            <div
+              className="glass-panel"
+              style={{ padding: '2rem', cursor: 'pointer', transition: 'all 0.2s', border: '1px solid var(--color-border)' }}
+              onClick={() => setMode('SIGNAL_LAB')}
+              onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--color-primary)'}
+              onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--color-border)'}
+            >
+              <Activity size={40} className="text-gradient" style={{ marginBottom: '1rem' }} />
+              <h2 style={{ marginBottom: '0.5rem' }}>Signal Lab</h2>
+              <p style={{ color: 'var(--color-text-muted)' }}>Validate problems and gauge demand with fake-door testing, simulated ad campaigns, and AI customer interviews.</p>
+            </div>
           </div>
         </main>
       )}
 
       {mode === 'IDEA_SCOUT' && (
-        <IdeaScoutApp 
-          isSettingsOpen={isSettingsOpen} 
-          setIsSettingsOpen={setIsSettingsOpen} 
-          apiKey={apiKey} 
-          setApiKey={setApiKey} 
-          model={model} 
-          setModel={setModel} 
+        <IdeaScoutApp
+          isSettingsOpen={isSettingsOpen}
+          setIsSettingsOpen={setIsSettingsOpen}
+          apiKey={apiKey}
+          setApiKey={setApiKey}
+          model={model}
+          setModel={setModel}
         />
       )}
 
       {mode === 'FEATURE_FORGE' && (
-        <FeatureForgeApp 
-          isSettingsOpen={isSettingsOpen} 
-          setIsSettingsOpen={setIsSettingsOpen} 
-          apiKey={apiKey} 
-          setApiKey={setApiKey} 
-          model={model} 
-          setModel={setModel} 
+        <FeatureForgeApp
+          isSettingsOpen={isSettingsOpen}
+          setIsSettingsOpen={setIsSettingsOpen}
+          apiKey={apiKey}
+          setApiKey={setApiKey}
+          model={model}
+          setModel={setModel}
         />
       )}
 
-      <SettingsModal 
-        isOpen={isSettingsOpen} 
-        onClose={() => setIsSettingsOpen(false)} 
-        onSave={handleSaveSettings} 
+      {mode === 'SIGNAL_LAB' && (
+        <SignalLabApp
+          isSettingsOpen={isSettingsOpen}
+          setIsSettingsOpen={setIsSettingsOpen}
+          apiKey={apiKey}
+          setApiKey={setApiKey}
+          model={model}
+          setModel={setModel}
+        />
+      )}
+
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        onSave={handleSaveSettings}
       />
 
       {mode === 'HUB' && (
